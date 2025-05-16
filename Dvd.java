@@ -1,26 +1,20 @@
 public class Dvd extends Product{
-    String diretor;
-    String idioma;
-    String genero;
-    int ano;
-    String nacionalidade;
+    private String diretor;
+    private String idioma;
+    private String genero;
+    private int ano;
+    private String nacionalidade;
 
-    public Dvd(int code, String filme, String diretor, String idioma, String genero, int ano, String nacionalidade){
-        super(code, filme);
-
-        this.diretor = diretor;
-        this.idioma = idioma;
-        this.genero = genero;
-        this.ano = ano;
-        this.nacionalidade = nacionalidade;
+    public Dvd(int newCode, String newTitulo, String newDiretor, String newIdioma, String newGenero, int newAno, String newNacionalidade){
+        super(newCode, newTitulo);
+        this.diretor = newDiretor;
+        this.idioma = newIdioma;
+        this.genero = newGenero;
+        this.ano = newAno;
+        this.nacionalidade = newNacionalidade;
     }
 
-    @Override
-    public int getCode(){
-        return super.getCode();
-    }
-
-    public String getFilme(){
+    public String getTitulo(){
         return super.getNome();
     }
 
@@ -46,8 +40,9 @@ public class Dvd extends Product{
 
     @Override
     public void printDetails(){
-        System.out.println("Código: " + getCode());
-        System.out.println("Filme: " + getFilme());
+        System.out.println("Tipo: DVD");
+        System.out.println("Código: " + super.getCode());
+        System.out.println("Titulo: " + getTitulo());
         System.out.println("Diretor: " + getDiretor());
         System.out.println("Idioma: " + getIdioma());
         System.out.println("Gênero: " + getGenero());

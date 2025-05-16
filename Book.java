@@ -1,28 +1,22 @@
 public class Book extends Product{
-    String autor;
-    String editora;
-    int ano;
-    int edicao;
-    int paginas;
-    String idioma;
+    private String autor;
+    private String editora;
+    private int ano;
+    private int edicao;
+    private int paginas;
+    private String idioma;
 
-    public Book(int code, String livro, String autor, String editora, int ano, int edicao, int paginas, String idioma){
-        super(code, livro);
-
-        this.autor = autor;
-        this.editora = editora;
-        this.ano = ano;
-        this.edicao = edicao;
-        this.paginas = paginas
-        this.idioma = idioma;
+    public Book(int newCode, String newTitulo, String newAutor, String newEditora, int newAno, int newEdicao, int newPaginas, String newIdioma){
+        super(newCode, newTitulo);
+        this.autor = newAutor;
+        this.editora = newEditora;
+        this.ano = newAno;
+        this.edicao = newEdicao;
+        this.paginas = newPaginas;
+        this.idioma = newIdioma;
     }
 
-    @Override
-    public int getCode(){
-        return super.getCode();
-    }
-
-    public String getLivro(){
+    public String getTitulo(){
         return super.getNome();
     }
 
@@ -52,8 +46,9 @@ public class Book extends Product{
 
     @Override
     public void printDetails(){
+        System.out.println("Tipo: Livro");
         System.out.println("Código: " + getCode());
-        System.out.println("Livro: " + getLivro());
+        System.out.println("Titulo: " + getTitulo());
         System.out.println("Autor: " + getAutor());
         System.out.println("Editora: " + getEditora());
         System.out.println("Ano: " + getAno());

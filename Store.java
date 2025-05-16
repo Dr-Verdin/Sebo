@@ -3,23 +3,29 @@ import java.util.*;
 public class Store {
     private Map<Integer, Product> produtos = new HashMap<>();    // ter controle sobre os produtos
     private Map<Integer, Integer> estoque = new HashMap<>();     // ter controle sobre a quantidade de cada item
-    private int quantProdutos;
+    private int quantProdutosMax;
+    private int quantProdutosAtual;
 
-    public Store(int quantProdutos){
-        this.quantProdutos = quantProdutos;
+    public Store(int lenMax){
+        this.quantProdutosMax = lenMax;
+        this.quantProdutosAtual = 0;
     }
 
-    public Produto getProduct(int code){
+    public Product getProduct(int code){
         return produtos.get(code);
     }
 
-    public Produto getProduct(String name){
-        for (Produto p : produtos.values()) {
-            if (p.getNome().equals(name)) {
+    public Product getProduct(String nome){
+        for (Product p : produtos.values()) {
+            if (p.getNome().equals(nome)) {
                 return p;
             }
         }
         return null;
+    }
+
+    public int getQuantProduto(int code){
+        return estoque.get(code);
     }
 
     private void newBook(String[] campos){
@@ -67,7 +73,7 @@ public class Store {
         estoque.put(newDvd.getCode(), 0);
     }
 
-    public void newProduct(String[] campos){
+    public void insertProduct(String[] campos){
         int code = Integer.parseInt(campos[2]);
         if(produtos.containsKey(code)){
             System.out.println("Produto com o código de barras " + code + " já existe.");
@@ -85,17 +91,23 @@ public class Store {
         }
     }
 
-    public void addProduct(int code, int quant){
+    public void addProducts(int code, int quant){
         if(!estoque.containsKey(code)){
             System.out.println("Produto com o código de barras " + code + " não existe.");
             return;
-        } else if(estoque.containsKey(code)){
-            int atualQuant = estoque.get(code);
-            estoque.put(code, atualQuant + quant); 
-        }       
+        }
+
+        if((quantProdutosAtual + quant) > quantProdutosMax){
+            System.out.println("Estoque cheio.");
+            return;
+        }
+
+        quantProdutosAtual += quant;
+        int atualQuant = estoque.get(code);
+        estoque.put(code, atualQuant + quant);     
     }
 
-    public boolean soldProduct(int code, int quant){
+    public boolean soldProducts(int code, int quant){
         if(!estoque.containsKey(code)){
             System.out.println("Produto com o código de barras " + code + " não existe.");
             return false;
@@ -104,6 +116,7 @@ public class Store {
         int atualQuant = estoque.get(code);
         if(atualQuant >= quant){
             estoque.put(code, atualQuant - quant); 
+            quantProdutosAtual -= quant;
             return true;
         } else {
             System.out.println("Quantidade insuficiente para vender.");
@@ -120,8 +133,8 @@ public class Store {
         } else {
             for (Product p : produtos.values()) {
                 p.printDetails(); // Chama o método de impressão de detalhes específico de cada produto
-                int quantidade = estoque.get(p.getCode());
-                System.out.println("Quantidade em estoque: " + quantidade);
+                int quant = estoque.get(p.getCode());
+                System.out.println("Quantidade em estoque: " + quant);
                 System.out.println("----------------------------------------");
                 System.out.println();
             }

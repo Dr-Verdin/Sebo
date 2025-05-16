@@ -4,19 +4,15 @@ public class Product {
 
     public Product(int newCode, String newNome){
         this.code = newCode;
-        this.nome = newNome
+        this.nome = newNome;
     }
 
     public int getCode(){
-        if(code != null){
-            return code;
-        }
+        return code;
     }
 
     public String getNome(){
-        if(nome != null){
-            return nome;
-        }
+        return nome;
     }
 
     public void printDetails(){
