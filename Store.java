@@ -1,0 +1,130 @@
+import java.util.*;
+
+public class Store {
+    private Map<Integer, Product> produtos = new HashMap<>();    // ter controle sobre os produtos
+    private Map<Integer, Integer> estoque = new HashMap<>();     // ter controle sobre a quantidade de cada item
+    private int quantProdutos;
+
+    public Store(int quantProdutos){
+        this.quantProdutos = quantProdutos;
+    }
+
+    public Produto getProduct(int code){
+        return produtos.get(code);
+    }
+
+    public Produto getProduct(String name){
+        for (Produto p : produtos.values()) {
+            if (p.getNome().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private void newBook(String[] campos){
+        int code = Integer.parseInt(campos[2]);
+        String nomeLivro = campos[3];
+        String autor = campos[4];
+        String editora = campos[5];
+        int ano = Integer.parseInt(campos[6]);
+        int edicao = Integer.parseInt(campos[7]);
+        int paginas = Integer.parseInt(campos[8]);
+        String idioma = campos[9];
+
+        Book newBook = new Book(code, nomeLivro, autor, editora, ano, edicao, paginas, idioma);
+
+        produtos.put(newBook.getCode(), newBook);
+        estoque.put(newBook.getCode(), 0);
+    }
+
+    private void newCd(String[] campos){
+        int code = Integer.parseInt(campos[2]);
+        String album = campos[3];
+        String artista = campos[4];
+        int numTrilhas = Integer.parseInt(campos[5]);
+        String gravadora = campos[6];
+        int ano = Integer.parseInt(campos[7]);
+
+        Cd newCd = new Cd(code, album, artista, numTrilhas, gravadora, ano);
+
+        produtos.put(newCd.getCode(), newCd);
+        estoque.put(newCd.getCode(), 0);
+    }
+
+    private void newDvd(String[] campos){
+        int code = Integer.parseInt(campos[2]);
+        String filme = campos[3];
+        String diretor = campos[4];
+        String idioma = campos[5];
+        String genero = campos[6];
+        int ano = Integer.parseInt(campos[7]);
+        String nacionalidade = campos[8];
+
+        Dvd newDvd = new Dvd(code, filme, diretor, idioma, genero, ano, nacionalidade);
+
+        produtos.put(newDvd.getCode(), newDvd);
+        estoque.put(newDvd.getCode(), 0);
+    }
+
+    public void newProduct(String[] campos){
+        int code = Integer.parseInt(campos[2]);
+        if(produtos.containsKey(code)){
+            System.out.println("Produto com o código de barras " + code + " já existe.");
+            return;
+        }
+
+        if(campos[1].equals("Livro")){
+            newBook(campos);
+        } else if(campos[1].equals("CD")){
+            newCd(campos);
+        } else if(campos[1].equals("DVD")){
+            newDvd(campos);
+        } else {
+            System.out.println("Tipo de produto inválido.");
+        }
+    }
+
+    public void addProduct(int code, int quant){
+        if(!estoque.containsKey(code)){
+            System.out.println("Produto com o código de barras " + code + " não existe.");
+            return;
+        } else if(estoque.containsKey(code)){
+            int atualQuant = estoque.get(code);
+            estoque.put(code, atualQuant + quant); 
+        }       
+    }
+
+    public boolean soldProduct(int code, int quant){
+        if(!estoque.containsKey(code)){
+            System.out.println("Produto com o código de barras " + code + " não existe.");
+            return false;
+        }
+        
+        int atualQuant = estoque.get(code);
+        if(atualQuant >= quant){
+            estoque.put(code, atualQuant - quant); 
+            return true;
+        } else {
+            System.out.println("Quantidade insuficiente para vender.");
+            return false;
+        }   
+    }
+
+    public void printSumario(){
+        System.out.println("Sumário dos Produtos na Loja:");
+        System.out.println("----------------------------------------");
+
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto cadastrado.");
+        } else {
+            for (Product p : produtos.values()) {
+                p.printDetails(); // Chama o método de impressão de detalhes específico de cada produto
+                int quantidade = estoque.get(p.getCode());
+                System.out.println("Quantidade em estoque: " + quantidade);
+                System.out.println("----------------------------------------");
+                System.out.println();
+            }
+        }
+    }
+}
