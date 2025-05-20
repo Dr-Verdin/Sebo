@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class Store {
-    private Map<Integer, Product> produtos = new HashMap<>();    // ter controle sobre os produtos
-    private Map<Integer, Integer> estoque = new HashMap<>();     // ter controle sobre a quantidade de cada item
+    private Map<Long, Product> produtos = new HashMap<>();    // ter controle sobre os produtos
+    private Map<Long, Integer> estoque = new HashMap<>();     // ter controle sobre a quantidade de cada item
     private int quantProdutosMax;
     private int quantProdutosAtual;
 
@@ -11,7 +11,7 @@ public class Store {
         this.quantProdutosAtual = 0;
     }
 
-    public Product getProduct(int code){
+    public Product getProduct(long code){
         return produtos.get(code);
     }
 
@@ -24,12 +24,12 @@ public class Store {
         return null;
     }
 
-    public int getQuantProduto(int code){
-        return estoque.get(code);
+    public int getQuantProduto(long code){
+        return estoque.getOrDefault(code, 0);
     }
 
     private void newBook(String[] campos){
-        int code = Integer.parseInt(campos[2]);
+        long code = Long.parseLong(campos[2]);
         String nomeLivro = campos[3];
         String autor = campos[4];
         String editora = campos[5];
@@ -45,7 +45,7 @@ public class Store {
     }
 
     private void newCd(String[] campos){
-        int code = Integer.parseInt(campos[2]);
+        long code = Long.parseLong(campos[2]);
         String album = campos[3];
         String artista = campos[4];
         int numTrilhas = Integer.parseInt(campos[5]);
@@ -59,7 +59,7 @@ public class Store {
     }
 
     private void newDvd(String[] campos){
-        int code = Integer.parseInt(campos[2]);
+        long code = Long.parseLong(campos[2]);
         String filme = campos[3];
         String diretor = campos[4];
         String idioma = campos[5];
@@ -73,11 +73,22 @@ public class Store {
         estoque.put(newDvd.getCode(), 0);
     }
 
-    public void insertProduct(String[] campos){
-        int code = Integer.parseInt(campos[2]);
+    public boolean insertProduct(String[] campos){
+        if(campos[1].equals("Livro")){
+            System.out.println("\nOperação inserir livro: " + campos[2]);
+        } else if(campos[1].equals("CD")){
+            System.out.println("\nOperação inserir CD: " + campos[2]);
+        } else if(campos[1].equals("DVD")){
+            System.out.println("\nOperação inserir DVD: " + campos[2]);
+        } else {
+            System.out.println("\nTipo de produto inválido.");
+            return false;
+        }
+
+        long code = Long.parseLong(campos[2]);
         if(produtos.containsKey(code)){
-            System.out.println("Produto com o código de barras " + code + " já existe.");
-            return;
+            System.out.println("***Erro: Código já cadastrado: " + code);
+            return false;
         }
 
         if(campos[1].equals("Livro")){
@@ -86,30 +97,36 @@ public class Store {
             newCd(campos);
         } else if(campos[1].equals("DVD")){
             newDvd(campos);
-        } else {
-            System.out.println("Tipo de produto inválido.");
         }
+
+        return true;
     }
 
-    public void addProducts(int code, int quant){
+    public boolean addProducts(long code, int quant){
+        System.out.println("\nOperação de compra: " + code);
+        
         if(!estoque.containsKey(code)){
-            System.out.println("Produto com o código de barras " + code + " não existe.");
-            return;
+            System.out.println("***Erro: Código inexistente: " + code);
+            return false;
         }
 
         if((quantProdutosAtual + quant) > quantProdutosMax){
             System.out.println("Estoque cheio.");
-            return;
+            return false;
         }
 
         quantProdutosAtual += quant;
         int atualQuant = estoque.get(code);
-        estoque.put(code, atualQuant + quant);     
+        estoque.put(code, atualQuant + quant);   
+
+        return true; 
     }
 
-    public boolean soldProducts(int code, int quant){
+    public boolean soldProducts(long code, int quant){
+        System.out.println("\nOperação de venda: " + code);
+
         if(!estoque.containsKey(code)){
-            System.out.println("Produto com o código de barras " + code + " não existe.");
+            System.out.println("***Erro: Código inexistente: " + code);
             return false;
         }
         
@@ -119,25 +136,34 @@ public class Store {
             quantProdutosAtual -= quant;
             return true;
         } else {
-            System.out.println("Quantidade insuficiente para vender.");
+            System.out.println("***Erro: Estoque insuficiente: " + code + " Quantidade: " + quant);
             return false;
         }   
     }
 
-    public void printSumario(){
-        System.out.println("Sumário dos Produtos na Loja:");
-        System.out.println("----------------------------------------");
+    private void printProdutosPorTipo(Class<?> tipo, String label) {
+        int total = 0;
+        for (Product p : produtos.values()) {
+            if (tipo.isInstance(p)) {
+                p.printDetails();
+                int quant = estoque.get(p.getCode());
+                total += quant;
+                System.out.println("Quantidade: " + quant + "\n");
+            }
+        }
+        System.out.println("Quantidade de " + label + ": " + total + "\n");
+    }
+
+    public void printSumario() {
+        System.out.println("\nOperação de sumarização: ");
 
         if (produtos.isEmpty()) {
             System.out.println("Nenhum produto cadastrado.");
         } else {
-            for (Product p : produtos.values()) {
-                p.printDetails(); // Chama o método de impressão de detalhes específico de cada produto
-                int quant = estoque.get(p.getCode());
-                System.out.println("Quantidade em estoque: " + quant);
-                System.out.println("----------------------------------------");
-                System.out.println();
-            }
+            printProdutosPorTipo(Book.class, "Livros");
+            printProdutosPorTipo(Cd.class, "CDs");
+            printProdutosPorTipo(Dvd.class, "DVDs");
         }
     }
+
 }

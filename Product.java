@@ -1,13 +1,13 @@
 public class Product {
-    private int code;
+    private long code;
     private String nome;
 
-    public Product(int newCode, String newNome){
+    public Product(long newCode, String newNome){
         this.code = newCode;
         this.nome = newNome;
     }
 
-    public int getCode(){
+    public long getCode(){
         return code;
     }
 
@@ -17,6 +17,6 @@ public class Product {
 
     public void printDetails(){
         System.out.println("Código: " + getCode());
-        System.out.println("Nome: " + getNome());
+        System.out.println("Título: " + getNome());
     }
 }

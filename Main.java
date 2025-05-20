@@ -13,47 +13,56 @@ public class Main {
                 continue;
             }
 
-            String[] campos = entrada.split(", ");
+            String[] campos = entrada.split(",");
 
             char comando = campos[0].charAt(0);
 
             switch(comando){
                 case 'I':   // inserir produtos
-                    sebo.insertProduct(campos);
+                    if(sebo.insertProduct(campos)){
+                        System.out.println("Operação realizada com sucesso");
+                    }
                     break;
 
                 case 'A':   // adicionar produtos ao estoque
-                    int codeAdd = Integer.parseInt(campos[1]);
+                    long codeAdd = Long.parseLong(campos[1]);
                     int quantAdd = Integer.parseInt(campos[2]);
-                    sebo.addProducts(codeAdd, quantAdd);
+                    if(sebo.addProducts(codeAdd, quantAdd)){
+                        System.out.println("Operação realizada com sucesso: " + codeAdd);
+                    }
                     break;
 
                 case 'V':   // vender produtos do estoque
-                    int codeSold = Integer.parseInt(campos[1]);
+                    long codeSold = Long.parseLong(campos[1]);
                     int quantSold = Integer.parseInt(campos[2]);
-                    sebo.soldProducts(codeSold, quantSold);
+
+                    if(sebo.soldProducts(codeSold, quantSold)){
+                        System.out.println("Operação realizada com sucesso: " + codeSold);
+                    }
                     break;
 
                 case 'P':   // Procurar produtos
+                    System.out.println("\nProcurando: " + campos[1]);
+
                     Product produtoBuscado;
                     if(isNumeric(campos[1])){
-                        produtoBuscado = sebo.getProduct(Integer.parseInt(campos[1]));
+                        produtoBuscado = sebo.getProduct(Long.parseLong(campos[1]));
                     } else {
                         produtoBuscado = sebo.getProduct(campos[1]);
                     }
+
                     if (produtoBuscado != null) {
+                        System.out.println("Encontrado:");
+
                         produtoBuscado.printDetails();
-                        int quant = sebo.getQuantProduto(produtoBuscado.getCode());
-                        System.out.println("Quantidade em estoque: " + quant);
                     } else {
-                        System.out.println("Produto não encontrado.");
+                        System.out.println("Produto não encontrado: " + campos[1]);
                     }
                     break;
 
                 case 'S':   // sumário da loja
                     sebo.printSumario();
-                    scanner.close();
-                    return;
+                    break;
 
                 default:
                     System.out.println("Comando inválido.");
@@ -63,11 +72,11 @@ public class Main {
         scanner.close();
     }
 
-    public static boolean isNumeric(String str) {
+    public static boolean isNumeric(String str){
         try {
-            Integer.parseInt(str); 
+            Long.parseLong(str); 
             return true;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e){
             return false;
         }
     }

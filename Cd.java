@@ -4,7 +4,7 @@ public class Cd extends Product{
     private String gravadora;
     private int ano;
 
-    public Cd(int newCode, String newAlbum, String newArtista, int newNumTrilhas, String newGravadora, int newAno){
+    public Cd(long newCode, String newAlbum, String newArtista, int newNumTrilhas, String newGravadora, int newAno){
         super(newCode, newAlbum);
         this.artista = newArtista;
         this.numTrilhas = newNumTrilhas;
@@ -34,12 +34,11 @@ public class Cd extends Product{
 
     @Override
     public void printDetails(){
-        System.out.println("Tipo: CD");
-        System.out.println("Código: " + getCode());
-        System.out.println("Albúm: " + getAlbum());
-        System.out.println("Artista: " + getArtista());
-        System.out.println("Número de Trilhas: " + getNumTrilhas());
+        System.out.println("CD");
+        super.printDetails();
+        System.out.println("Banda: " + getArtista());
         System.out.println("Gravadora: " + getGravadora());
         System.out.println("Ano: " + getAno());
+        System.out.println("trilhas: " + getNumTrilhas());
     }
 }

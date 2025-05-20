@@ -5,7 +5,7 @@ public class Dvd extends Product{
     private int ano;
     private String nacionalidade;
 
-    public Dvd(int newCode, String newTitulo, String newDiretor, String newIdioma, String newGenero, int newAno, String newNacionalidade){
+    public Dvd(long newCode, String newTitulo, String newDiretor, String newIdioma, String newGenero, int newAno, String newNacionalidade){
         super(newCode, newTitulo);
         this.diretor = newDiretor;
         this.idioma = newIdioma;
@@ -40,13 +40,12 @@ public class Dvd extends Product{
 
     @Override
     public void printDetails(){
-        System.out.println("Tipo: DVD");
-        System.out.println("Código: " + super.getCode());
-        System.out.println("Titulo: " + getTitulo());
+        System.out.println("DVD");
+        super.printDetails();
         System.out.println("Diretor: " + getDiretor());
-        System.out.println("Idioma: " + getIdioma());
         System.out.println("Gênero: " + getGenero());
         System.out.println("Ano: " + getAno());
         System.out.println("Nacionalidade: " + getNacionalidade());
+        System.out.println("Idioma: " + getIdioma());
     }
 }
